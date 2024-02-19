@@ -15,7 +15,7 @@ class ServiceInterceptor @Inject constructor(private val tokenManager: TokenMana
           tokenManager.getAccessToken().first()
 
       }
-        val request = chain.request().newBuilder().header(Constantes.AUTHORIZATION, "$token").build()
+        val request = chain.request().newBuilder().header("Authorization", "$token").build()
         return chain.proceed(request)
     }
 }

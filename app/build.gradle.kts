@@ -9,16 +9,16 @@ plugins {
 apollo {
     service("service") {
         packageName.set("com.serverschema")
-        mapScalar("LocalDate", "java.time.LocalDate", "com.apollographql.apollo3.adapter.JavaLocalDateAdapter")
+//        mapScalar("LocalDate", "java.time.LocalDate", "com.apollographql.apollo3.adapter.JavaLocalDateAdapter")
     }
 }
 
 android {
-    namespace = "com.example.apollo_davidroldan"
+    namespace = "com.example.composetokens"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.apollo_davidroldan"
+        applicationId = "com.example.composetokens"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -70,7 +70,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime")
     implementation("androidx.compose.animation:animation")
 
-    implementation("androidx.compose.ui:ui-tooling-preview:1.6.0")
+    implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.navigation:navigation-compose")
     implementation("androidx.lifecycle:lifecycle-runtime-compose")

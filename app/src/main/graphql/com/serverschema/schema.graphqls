@@ -1,0 +1,66 @@
+
+
+type Tienda {
+    id: ID
+    nombre: String
+    ubicacion: String
+
+}
+
+type Producto {
+    id: ID!
+    nombre: String!
+    precio: Float!
+    cantidadEnStock: Int!
+
+}
+
+type Empleado {
+    id: ID!
+    nombre: String!
+    cargo: String!
+    tienda: Tienda!
+
+}
+
+type Venta {
+    id: ID!
+    fecha: String!
+    montoTotal: Float!
+    empleado: Empleado!
+    cliente: Cliente!
+
+}
+
+type Cliente {
+    id: ID!
+    nombre: String!
+    email: String!
+
+}
+input TiendaInput {
+    nombre: String!
+    ubicacion: String!
+}
+
+input UpdateTiendaInput {
+    id: ID!
+    nombre: String!
+    ubicacion: String!
+}
+
+input CrearProductoInput {
+    nombre: String!
+    precio: Float!
+    cantidadEnStock: Int!
+    idTienda: ID!
+}
+type Query {
+getTiendas: [Tienda!]!
+
+}
+type Mutation {
+    addTienda(tiendaInput: TiendaInput!): Tienda
+    deleteTienda(id: ID!): Boolean
+    updateTienda(updateTiendaInput: UpdateTiendaInput!): Tienda
+}
