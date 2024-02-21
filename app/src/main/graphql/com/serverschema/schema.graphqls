@@ -1,3 +1,5 @@
+scalar LocalDate
+
 type Tienda {
     id: ID
     nombre: String
@@ -23,7 +25,7 @@ type Empleado {
 
 type Venta {
     id: ID!
-    fecha: String!
+    fecha: LocalDate!
     total: Float!
     cliente: Cliente!
     empleado: Empleado!

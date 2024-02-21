@@ -9,7 +9,7 @@ plugins {
 apollo {
     service("service") {
         packageName.set("com.serverschema")
-//        mapScalar("LocalDate", "java.time.LocalDate", "com.apollographql.apollo3.adapter.JavaLocalDateAdapter")
+    mapScalar("LocalDate", "java.time.LocalDate", "com.apollographql.apollo3.adapter.JavaLocalDateAdapter")
     }
 }
 
