@@ -1,4 +1,4 @@
-package com.example.composetokens.ui.screens.lista
+package com.example.composetokens.ui.screens.venta
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -27,18 +27,19 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.composetokens.domain.model.Tienda
+import com.example.composetokens.domain.model.Venta
 
 
 @Composable
-fun ListaScreen(viewmodel: ListaViewModel = hiltViewModel(), onViewDetalle: (Long?) -> Unit, bottomNavigationBar : @Composable () -> Unit = {}) {
+fun VentaScreen(viewmodel: VentaViewModel = hiltViewModel(),onViewDetalle: (Long?) -> Unit, bottomNavigationBar : @Composable () -> Unit = {}) {
 
     val state = viewmodel.state.collectAsStateWithLifecycle()
-    ScreenContent(state.value,onViewDetalle,bottomNavigationBar= bottomNavigationBar){viewmodel.handleEvent(ListaEvent.GetTiendas)}
+    ScreenContent(state.value,onViewDetalle,bottomNavigationBar= bottomNavigationBar){viewmodel.handleEvent(VentaEvent.GetVentas)}
 }
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ScreenContent(
-    state: ListaState,
+    state: VentaState,
     onViewDetalle: (Long?) -> Unit,
     bottomNavigationBar: @Composable () -> Unit,
     function: () -> Unit
@@ -74,8 +75,7 @@ fun ScreenContent(
 
             items(items = state.lista, key = { persona -> persona.id }) {
                     persona ->
-                TiendaItem(persona = persona,
-                    onViewDetalle = onViewDetalle,
+                TiendaItem(persona = persona,onViewDetalle = onViewDetalle,
                     modifier = Modifier.animateItemPlacement(
                         animationSpec = tween(1000)
                     ))
@@ -87,7 +87,7 @@ fun ScreenContent(
 }
 
 @Composable
-fun TiendaItem(persona: Tienda,
+fun TiendaItem(persona: Venta,
 
                onViewDetalle: (Long?) -> Unit,
                modifier: Modifier = Modifier){
@@ -95,20 +95,13 @@ fun TiendaItem(persona: Tienda,
     Card(modifier = modifier
         .fillMaxWidth()
         .padding(8.dp)
-        .clickable { onViewDetalle(persona.id) } ) {
+        .clickable(onClick = { onViewDetalle(persona.id) })
+       ) {
         Row( modifier = Modifier.padding(8.dp)){
-            persona.nombre?.let {
-                Text(
-                    modifier = Modifier.weight(weight = 0.4F),
-                    text = it
-                )
-            }
-            persona.ubicacion?.let {
-                Text(
-                    modifier = Modifier.weight(0.4F),
-                    text = it
-                )
-            }
+            Text(
+                text = persona.total.toString()+"€"
+            )
+
 
         }
     }

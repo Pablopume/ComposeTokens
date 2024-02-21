@@ -23,30 +23,46 @@ class TokenAuthenticator @Inject constructor(private val tokenManager: TokenMana
         val token = runBlocking {
             tokenManager.getToken().first()
         }
-        return if (response.code != 401 || token == null) {
+        return if ( token == null) {
             response.request.newBuilder().build()
         } else {
             runBlocking {
                 val newToken = getNewToken(token)
                 val newAccessToken = newToken.data?.accessToken
                 newAccessToken?.let { tokenManager.saveAccessToken(it) }
-                response.request.newBuilder().header("Authorization", "$token").build()
+                response.request.newBuilder().header("Authorization", "Bearer $token").build()
             }
         }
 
     }
 
     private fun getNewToken(refreshToken: String?): NetworkResult<LoginTokens> {
+        try {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         val okHttpClient = OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://localhost:8764/")
+            .baseUrl("http://192.168.1.155:8764/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
         val service = retrofit.create(AuthService::class.java)
-        return service.refreshToken(refreshToken)
+        val call=service.refreshToken(refreshToken)
+        val response = call.execute()
+        return if (response.isSuccessful) {
+            val loginTokens = response.body()
+            if (loginTokens != null) {
+                NetworkResult.Success(loginTokens)
+            } else {
+                NetworkResult.Error("${response.code()} ${response.message()}")
+            }
+        } else {
+            NetworkResult.Error("${response.code()} ${response.message()}")
+        }
+        } catch (e: Exception) {
+            return NetworkResult.Error(e.message ?: e.toString())
+        }
+
     }
 }

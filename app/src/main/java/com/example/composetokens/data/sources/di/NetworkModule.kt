@@ -29,11 +29,9 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideHttpClient(interceptor: ServiceInterceptor, authenticator: TokenAuthenticator): OkHttpClient {
+    fun provideHttpClient(): OkHttpClient {
         return OkHttpClient
             .Builder()
-            .addInterceptor(interceptor)
-            .authenticator(authenticator)
             .build()
     }
 
@@ -87,7 +85,7 @@ object NetworkModule {
     @Provides
     fun createApolloClient(interceptor: ServiceInterceptor, authenticator: TokenAuthenticator): ApolloClient {
         return ApolloClient.Builder()
-            .serverUrl("http://192.168.1.155:8765/")
+            .serverUrl("http://192.168.1.155:8765/graphql")
             .okHttpClient(
                 OkHttpClient.Builder()
                     .addInterceptor(interceptor)

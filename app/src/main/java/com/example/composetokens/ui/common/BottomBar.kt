@@ -1,4 +1,4 @@
-package com.example.composefullequip.ui.common
+package com.example.composetokens.ui.common
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -11,8 +11,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.composefullequip.ui.navigation.Screens
-import com.example.composefullequip.ui.navigation.screensBottomBar
+import com.example.composetokens.ui.navigation.Screens
 
 @Composable
 fun BottomBar(
@@ -21,13 +20,13 @@ fun BottomBar(
 
 
 
-) {
+    ) {
     NavigationBar(){
         val state = navController.currentBackStackEntryAsState()
         val currentDestination = state.value?.destination
         screens.forEach { screen ->
             NavigationBarItem(
-                icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
+                icon = { Icon(screen.icon, contentDescription = null) },
                 label = { Text(screen.route) },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 onClick = {

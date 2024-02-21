@@ -1,8 +1,6 @@
 package com.example.composetokens.data.sources.remote
 
-import com.example.composetokens.data.TokenManager
 import com.example.composetokens.data.sources.LoginTokens
-import com.example.composetokens.data.sources.services.AuthService
 import com.example.composetokens.data.sources.services.CredentialsService
 import com.example.plantillaexamen.utils.NetworkResult
 import javax.inject.Inject

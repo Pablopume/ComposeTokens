@@ -1,0 +1,39 @@
+query GetTiendas {
+    getTiendas {
+        id
+        nombre
+        ubicacion
+    }
+}
+query GetEmpleadosByIdTienda($id: ID!) {
+    getEmpleadosByIdTienda(id: $id) {
+        id
+        nombre
+        apellido
+        cargo
+    }
+}
+query GetCliente {
+    getClientes {
+        id
+        nombre
+        email
+    }
+}
+
+query GetVentas {
+    getVentas {
+        id
+        fecha
+        total
+    }
+}
+
+
+mutation DeleteCliente($id: ID!) {
+    deleteCliente(id: $id)
+}
+mutation UpdateVenta($updateVentaInput: UpdateVentaInput!) {
+    updateVenta(updateVentaInput: $updateVentaInput)
+}
+

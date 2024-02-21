@@ -1,8 +1,11 @@
-package com.example.composetokens.ui.screens.lista
+package com.example.composetokens.ui.screens.updateventa
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.composetokens.domain.model.Venta
 import com.example.composetokens.domain.usecases.GetTiendasUseCase
+import com.example.composetokens.domain.usecases.GetVentasUseCase
+import com.example.composetokens.domain.usecases.UpdateVentasUseCase
 
 import com.example.plantillaexamen.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,34 +15,34 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ListaViewModel @Inject constructor(private val getTiendasUseCase: GetTiendasUseCase) :
+class UpdateVentaViewModel @Inject constructor(private val updateVentaUseCase: UpdateVentasUseCase) :
     ViewModel() {
     private val _state =
-        MutableStateFlow(ListaState(lista = emptyList(), loading = false, error = null))
-    val state: StateFlow<ListaState> get() = _state
+        MutableStateFlow(UpdateVentaState(updated = false, loading = false, error = null))
+    val state: StateFlow<UpdateVentaState> get() = _state
 
 
 
-    fun handleEvent(event: ListaEvent) {
+    fun handleEvent(event: UpdateVentaEvent) {
         when (event) {
-            is ListaEvent.GetTiendas -> {
-                getTiendas()
+            is UpdateVentaEvent.UpdateVenta -> {
+                updateVentas(event.venta)
             }
         }
     }
 
-    private fun getTiendas() {
+    private fun updateVentas(venta: Venta) {
         viewModelScope.launch {
-            getTiendasUseCase().collect { result ->
+            updateVentaUseCase(venta).collect { result ->
                 when (result) {
                     is NetworkResult.Loading -> {
                         _state.value = _state.value.copy(loading = true)
                     }
 
                     is NetworkResult.Success -> {
-                        result.data?.let { tiendas ->
+                        result.data?.let {
                             _state.value = _state.value.copy(
-                                lista = tiendas,
+                                updated = true,
                                 loading = false
                             )
                         }

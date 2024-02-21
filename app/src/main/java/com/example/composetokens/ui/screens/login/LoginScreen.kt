@@ -73,6 +73,7 @@ private fun ScreenContent(
     }
     if (value.logged) {
         onLoginDone()
+        value.logged=false
     }
 }
 

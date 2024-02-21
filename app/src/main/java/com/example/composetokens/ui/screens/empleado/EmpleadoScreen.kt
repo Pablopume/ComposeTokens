@@ -1,4 +1,4 @@
-package com.example.composetokens.ui.screens.lista
+package com.example.composetokens.ui.screens.empleado
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -26,24 +26,33 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.composetokens.domain.model.Tienda
+import androidx.navigation.compose.rememberNavController
+import com.example.composetokens.domain.model.Empleado
 
 
 @Composable
-fun ListaScreen(viewmodel: ListaViewModel = hiltViewModel(), onViewDetalle: (Long?) -> Unit, bottomNavigationBar : @Composable () -> Unit = {}) {
-
+fun EmpleadoScreen(
+    viewmodel: EmpleadoViewModel = hiltViewModel(),
+    onViewDetalle: (Long?) -> Unit,
+    bottomNavigationBar: @Composable () -> Unit = {},
+    tiendaId: Long
+) {
     val state = viewmodel.state.collectAsStateWithLifecycle()
-    ScreenContent(state.value,onViewDetalle,bottomNavigationBar= bottomNavigationBar){viewmodel.handleEvent(ListaEvent.GetTiendas)}
-}
+    ScreenContent(state.value,onViewDetalle,bottomNavigationBar= bottomNavigationBar){
+        viewmodel.handleEvent(EmpleadoEvent.GetEmpleados(tiendaId))
+    }
+
+    }
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ScreenContent(
-    state: ListaState,
+    state: EmpleadoState,
     onViewDetalle: (Long?) -> Unit,
     bottomNavigationBar: @Composable () -> Unit,
     function: () -> Unit
 ) {
-    function()
+function()
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold (
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -58,11 +67,12 @@ fun ScreenContent(
         LaunchedEffect(state.error) {
             state.error?.let {
                 snackbarHostState.showSnackbar(
-                    message = it,
-                    actionLabel = "Fuera",
+                    message = state.error.toString(),
                     duration = SnackbarDuration.Short,
+
                 )
             }
+
         }
 
         LazyColumn(
@@ -87,8 +97,7 @@ fun ScreenContent(
 }
 
 @Composable
-fun TiendaItem(persona: Tienda,
-
+fun TiendaItem(persona: Empleado,
                onViewDetalle: (Long?) -> Unit,
                modifier: Modifier = Modifier){
 
@@ -103,7 +112,7 @@ fun TiendaItem(persona: Tienda,
                     text = it
                 )
             }
-            persona.ubicacion?.let {
+            persona.apellido?.let {
                 Text(
                     modifier = Modifier.weight(0.4F),
                     text = it

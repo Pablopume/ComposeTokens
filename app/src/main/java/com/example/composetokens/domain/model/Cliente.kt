@@ -1,7 +1,7 @@
 package com.example.composetokens.domain.model
 
-data class Tienda(
+data class Cliente(
     val id: Long,
     val nombre: String?,
-    val ubicacion: String?
+    val email: String?,
 )

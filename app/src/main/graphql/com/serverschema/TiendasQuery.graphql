@@ -1,7 +1,0 @@
-query GetTiendas {
-    getTiendas {
-        id
-        nombre
-        ubicacion
-    }
-}

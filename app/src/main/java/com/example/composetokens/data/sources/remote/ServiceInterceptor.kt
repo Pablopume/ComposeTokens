@@ -13,9 +13,8 @@ class ServiceInterceptor @Inject constructor(private val tokenManager: TokenMana
     override fun intercept(chain: Interceptor.Chain): Response {
       val token = runBlocking {
           tokenManager.getAccessToken().first()
-
       }
-        val request = chain.request().newBuilder().header("Authorization", "$token").build()
+        val request = chain.request().newBuilder().header("Authorization", "Bearer $token").build()
         return chain.proceed(request)
     }
 }

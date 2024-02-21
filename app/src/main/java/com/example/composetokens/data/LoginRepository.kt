@@ -14,7 +14,7 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 class LoginRepository @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcher: CoroutineDispatcher
 ) {
     fun login(user: String, password: String): Flow<NetworkResult<LoginTokens>> {
         return flow {

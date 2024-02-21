@@ -1,7 +1,8 @@
-package com.example.composetokens.ui.screens.lista
+package com.example.composetokens.ui.screens.empleado
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.composetokens.domain.usecases.GetEmpleadosByIdUseCase
 import com.example.composetokens.domain.usecases.GetTiendasUseCase
 
 import com.example.plantillaexamen.utils.NetworkResult
@@ -12,34 +13,33 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ListaViewModel @Inject constructor(private val getTiendasUseCase: GetTiendasUseCase) :
+class EmpleadoViewModel @Inject constructor(private val getEmpleadosByIdUseCase: GetEmpleadosByIdUseCase) :
     ViewModel() {
     private val _state =
-        MutableStateFlow(ListaState(lista = emptyList(), loading = false, error = null))
-    val state: StateFlow<ListaState> get() = _state
+        MutableStateFlow(EmpleadoState(lista = emptyList(), loading = false, error = null))
+    val state: StateFlow<EmpleadoState> get() = _state
 
 
-
-    fun handleEvent(event: ListaEvent) {
+    fun handleEvent(event: EmpleadoEvent) {
         when (event) {
-            is ListaEvent.GetTiendas -> {
-                getTiendas()
+            is EmpleadoEvent.GetEmpleados -> {
+                getEmpleados(event.id)
             }
         }
     }
 
-    private fun getTiendas() {
+    private fun getEmpleados(id: Long) {
         viewModelScope.launch {
-            getTiendasUseCase().collect { result ->
+            getEmpleadosByIdUseCase(id).collect { result ->
                 when (result) {
                     is NetworkResult.Loading -> {
                         _state.value = _state.value.copy(loading = true)
                     }
 
                     is NetworkResult.Success -> {
-                        result.data?.let { tiendas ->
+                        result.data?.let { empleados ->
                             _state.value = _state.value.copy(
-                                lista = tiendas,
+                                lista = empleados,
                                 loading = false
                             )
                         }
