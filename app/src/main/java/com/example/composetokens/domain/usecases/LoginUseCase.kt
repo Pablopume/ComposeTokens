@@ -12,14 +12,14 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(private val loginRepository: LoginRepository,private val tokenManager: TokenManager,private val dispatcher: CoroutineDispatcher ){
-     operator fun invoke(email: String, password: String): Flow<NetworkResult<LoginTokens>> {
+   suspend operator fun invoke(email: String, password: String): Flow<NetworkResult<LoginTokens>> {
       val resultado=  loginRepository.login(email, password)
-        resultado.onEach{result->
+        resultado.collect{result->
             if(result is NetworkResult.Success){
                 result.data?.accessToken?.let { tokenManager.saveAccessToken(it) }
                 result.data?.refreshToken?.let { tokenManager.saveToken(it) }
             }
-        }.flowOn(dispatcher)
+        }
         return resultado
     }
 }
