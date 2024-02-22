@@ -1,5 +1,4 @@
 package com.example.composetokens.ui.screens.cliente
-
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -21,7 +19,6 @@ import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissState
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -68,7 +65,9 @@ fun ScreenContent(
     bottomNavigationBar: @Composable () -> Unit,
     function: (ClienteEvent) -> Unit
 ) {
-    function(ClienteEvent.GetClientes)
+    LaunchedEffect(Unit) {
+        function(ClienteEvent.GetClientes)
+    }
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -93,13 +92,13 @@ fun ScreenContent(
                 .background(Color.Gray)
         ) {
 
-            items(items = state.lista, key = { persona -> persona.id }) { persona ->
+            items(items = state.lista, key = { cliente -> cliente.id }) { cliente ->
                 SwipeToDeleteContainer(
-                    item = persona,
-                    onDelete = { function(ClienteEvent.DeleteCliente(persona.id)) }
-                ) { personaItem ->
+                    item = cliente,
+                    onDelete = { function(ClienteEvent.DeleteCliente(cliente.id)) }
+                ) { clienteItem ->
                     ClienteItem(
-                        persona = personaItem,
+                        cliente = clienteItem,
                         modifier = Modifier.animateItemPlacement(
                             animationSpec = tween(1000)
                         )
@@ -164,20 +163,20 @@ fun <T> SwipeToDeleteContainer(
 }
 
 @Composable
-fun ClienteItem(persona: Cliente, modifier: Modifier = Modifier) {
+fun ClienteItem(cliente: Cliente, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
         Row(modifier = Modifier.padding(8.dp)) {
-            persona.nombre?.let {
+            cliente.nombre?.let {
                 Text(
                     modifier = Modifier.weight(weight = 0.4F),
                     text = it
                 )
             }
-            persona.email?.let {
+            cliente.email?.let {
                 Text(
                     modifier = Modifier.weight(0.4F),
                     text = it
@@ -196,7 +195,7 @@ fun DeleteBackground(
     val color = if (swipeDismissState.dismissDirection == DismissDirection.EndToStart) {
         Color.Red
     } else {
-        Color.Green
+        Color.Yellow
     }
     Box(
         modifier = Modifier

@@ -7,6 +7,7 @@ import com.example.composetokens.domain.model.Tienda
 import com.example.composetokens.domain.model.Venta
 
 import com.example.plantillaexamen.utils.NetworkResult
+import com.serverschema.GetVentaByIdQuery
 import com.serverschema.GetVentasQuery
 import com.serverschema.UpdateVentaMutation
 import com.serverschema.type.UpdateVentaInput
@@ -52,5 +53,23 @@ class RemoteDataSourceVentas @Inject constructor(private val apolloClient: Apoll
         }
 
 
+    }
+
+    suspend fun getVentaById(id: Long): NetworkResult<Venta> {
+        return try {
+            val response = apolloClient.query(GetVentaByIdQuery(id.toString())).execute()
+            if (response.hasErrors()) {
+                NetworkResult.Error(response.errors?.first()?.message ?: "Error Desconocido")
+            } else {
+                val venta = response.data?.getVentaById?.toVenta()
+                if (venta != null) {
+                    NetworkResult.Success(venta)
+                } else {
+                    NetworkResult.Error(response.errors?.first()?.message ?: "Error Desconocido")
+                }
+            }
+        } catch (e: Exception) {
+            NetworkResult.Error(e.message ?: e.toString())
+        }
     }
 }

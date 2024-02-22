@@ -28,4 +28,12 @@ class VentaRepository @Inject constructor(private val remoteDataSource: RemoteDa
             emit(response)
         }.flowOn(dispatcher)
     }
+
+    fun getVentaById(id: Long) : Flow<NetworkResult<Venta>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            val response = remoteDataSource.getVentaById(id)
+            emit(response)
+        }.flowOn(dispatcher)
+    }
 }

@@ -3,6 +3,7 @@ package com.example.composetokens.data
 import com.example.composetokens.data.sources.remote.RemoteDataSourceEmpleado
 import com.example.composetokens.domain.model.Empleado
 import com.example.plantillaexamen.utils.NetworkResult
+import com.serverschema.type.EmpleadoInput
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -16,6 +17,13 @@ class EmpleadoRepository @Inject constructor(private val remoteDataSource: Remot
         return flow {
             emit(NetworkResult.Loading())
             val response = remoteDataSource.getEmpleadosById(id)
+            emit(response)
+        }.flowOn(dispatcher)
+    }
+    fun addEmpleado(empleado: Empleado) : Flow<NetworkResult<String>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            val response = remoteDataSource.addEmpleado(empleado)
             emit(response)
         }.flowOn(dispatcher)
     }

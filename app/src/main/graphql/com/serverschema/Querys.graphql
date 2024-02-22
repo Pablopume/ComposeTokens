@@ -26,14 +26,38 @@ query GetVentas {
         id
         fecha
         total
+        clienteId
+        empleadoId
     }
 }
 
+query GetVentaById($id: ID!) {
+    getVentaById(id: $id) {
+        id
+        fecha
+        total
+        clienteId
+        empleadoId
+    }
+}
+
+query GetProductos {
+    getProductos {
+        id
+        nombre
+        precio
+        stock
+    }
+}
 
 mutation DeleteCliente($id: ID!) {
     deleteCliente(id: $id)
 }
 mutation UpdateVenta($updateVentaInput: UpdateVentaInput!) {
     updateVenta(updateVentaInput: $updateVentaInput)
+}
+
+mutation AddEmpleado($empleadoInput: EmpleadoInput!) {
+    addEmpleado(empleadoInput: $empleadoInput)
 }
 

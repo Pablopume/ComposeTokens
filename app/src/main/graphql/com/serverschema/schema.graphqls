@@ -11,7 +11,7 @@ type Producto {
     id: ID!
     nombre: String!
     precio: Float!
-    cantidadEnStock: Int!
+    stock: Int!
 
 }
 
@@ -27,8 +27,8 @@ type Venta {
     id: ID!
     fecha: LocalDate!
     total: Float!
-    cliente: Cliente!
-    empleado: Empleado!
+    clienteId: ID!
+    empleadoId: ID!
 
 }
 
@@ -43,6 +43,13 @@ input TiendaInput {
     ubicacion: String!
 }
 
+input EmpleadoInput {
+    nombre: String!
+    apellido: String!
+    cargo: String!
+    tiendaId: ID!
+}
+
 input UpdateTiendaInput {
     id: ID!
     nombre: String!
@@ -53,6 +60,8 @@ input UpdateVentaInput {
     id: ID!
     fecha: String!
     total: Float!
+    clienteId: ID!
+    empleadoId: ID!
 
 }
 input CrearProductoInput {
@@ -66,9 +75,12 @@ type Query {
     getEmpleadosByIdTienda(id: ID!): [Empleado!]!
     getClientes: [Cliente!]!
     getVentas: [Venta!]!
+    getVentaById(id: ID!): Venta
+    getProductos: [Producto!]!
 }
 type Mutation {
     addTienda(tiendaInput: TiendaInput!): Tienda
+    addEmpleado(empleadoInput: EmpleadoInput!): Boolean
     deleteTienda(id: ID!): Boolean
     deleteCliente(id: ID!): Boolean
     updateTienda(updateTiendaInput: UpdateTiendaInput!): Tienda

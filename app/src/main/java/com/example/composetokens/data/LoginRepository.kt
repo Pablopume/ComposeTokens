@@ -1,5 +1,6 @@
 package com.example.composetokens.data
 
+import com.example.composetokens.CredentialsRegister
 import com.example.composetokens.data.sources.LoginTokens
 import com.example.composetokens.data.sources.remote.RemoteDataSource
 import com.example.plantillaexamen.utils.NetworkResult
@@ -19,6 +20,15 @@ class LoginRepository @Inject constructor(
     fun login(user: String, password: String): Flow<NetworkResult<LoginTokens>> {
         return flow {
             val response = remoteDataSource.login(user, password)
+            emit(response)
+            emit(NetworkResult.Loading())
+
+        }.flowOn(dispatcher)
+    }
+
+    fun register(credentialsRegister: CredentialsRegister): Flow<NetworkResult<Boolean>> {
+        return flow {
+            val response = remoteDataSource.register(credentialsRegister)
             emit(response)
             emit(NetworkResult.Loading())
 

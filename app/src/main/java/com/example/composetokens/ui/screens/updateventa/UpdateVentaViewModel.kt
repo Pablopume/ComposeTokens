@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.composetokens.domain.model.Venta
 import com.example.composetokens.domain.usecases.GetTiendasUseCase
+import com.example.composetokens.domain.usecases.GetVentaByIdUseCase
 import com.example.composetokens.domain.usecases.GetVentasUseCase
 import com.example.composetokens.domain.usecases.UpdateVentasUseCase
 
@@ -15,25 +16,34 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UpdateVentaViewModel @Inject constructor(private val updateVentaUseCase: UpdateVentasUseCase) :
+class UpdateVentaViewModel @Inject constructor(
+    private val updateVentaUseCase: UpdateVentasUseCase,
+    private val getVentaByIdUseCase: GetVentaByIdUseCase
+) :
     ViewModel() {
     private val _state =
         MutableStateFlow(UpdateVentaState(updated = false, loading = false, error = null))
     val state: StateFlow<UpdateVentaState> get() = _state
 
 
-
     fun handleEvent(event: UpdateVentaEvent) {
         when (event) {
             is UpdateVentaEvent.UpdateVenta -> {
-                updateVentas(event.venta)
+                updateVentas()
+            }
+
+            is UpdateVentaEvent.SetVenta -> {
+                setVenta(event.venta)
+            }
+            is UpdateVentaEvent.GetVenta -> {
+                getVenta(event.id)
             }
         }
     }
 
-    private fun updateVentas(venta: Venta) {
+    private fun getVenta(id: Long) {
         viewModelScope.launch {
-            updateVentaUseCase(venta).collect { result ->
+            getVentaByIdUseCase(id).collect { result ->
                 when (result) {
                     is NetworkResult.Loading -> {
                         _state.value = _state.value.copy(loading = true)
@@ -42,7 +52,7 @@ class UpdateVentaViewModel @Inject constructor(private val updateVentaUseCase: U
                     is NetworkResult.Success -> {
                         result.data?.let {
                             _state.value = _state.value.copy(
-                                updated = true,
+                                venta = it,
                                 loading = false
                             )
                         }
@@ -57,6 +67,40 @@ class UpdateVentaViewModel @Inject constructor(private val updateVentaUseCase: U
                 }
             }
         }
+    }
 
+    private fun updateVentas() {
+        viewModelScope.launch {
+            _state.value.venta?.let {
+                updateVentaUseCase(it).collect { result ->
+                    when (result) {
+                        is NetworkResult.Loading -> {
+                            _state.value = _state.value.copy(loading = true)
+                        }
+
+                        is NetworkResult.Success -> {
+                            result.data?.let {
+                                _state.value = _state.value.copy(
+                                    updated = true,
+                                    loading = false
+                                )
+                            }
+                        }
+
+                        is NetworkResult.Error -> {
+                            _state.value = _state.value.copy(
+                                error = result.message ?: "Error",
+                                loading = false
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun setVenta(venta: Venta) {
+        _state.value = _state.value.copy(venta = venta)
     }
 }

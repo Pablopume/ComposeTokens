@@ -8,7 +8,6 @@ import com.apollographql.apollo3.network.okHttpClient
 import com.example.composetokens.data.sources.remote.ServiceInterceptor
 import com.example.composetokens.data.sources.remote.TokenAuthenticator
 import com.example.composetokens.data.sources.services.AuthService
-import com.example.composetokens.data.sources.services.CredentialsService
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -46,17 +45,14 @@ object NetworkModule {
         gsonConverterFactory: GsonConverterFactory
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://10.2.3.112:8764/")
+            .baseUrl("http://192.168.1.155:8764/")
             .client(okHttpClient)
             .addConverterFactory(gsonConverterFactory)
             .build()
     }
 
 
-    @Singleton
-    @Provides
-    fun provideCredentialsService(retrofit: Retrofit): CredentialsService =
-        retrofit.create(CredentialsService::class.java)
+
     @Singleton
     @Provides
     fun provideAuthService(retrofit: Retrofit): AuthService {

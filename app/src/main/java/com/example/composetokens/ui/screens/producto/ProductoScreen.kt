@@ -1,4 +1,4 @@
-package com.example.composetokens.ui.screens.venta
+package com.example.composetokens.ui.screens.producto
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -24,29 +24,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.composetokens.domain.model.Venta
+import com.example.composetokens.domain.model.Producto
 
 
 @Composable
-fun VentaScreen(
-    viewmodel: VentaViewModel = hiltViewModel(),
-    onViewDetalle: (Long?) -> Unit,
+fun ProductoScreen(
+    viewmodel: ProductoViewModel = hiltViewModel(),
     bottomNavigationBar: @Composable () -> Unit = {}
 ) {
 
     val state = viewmodel.state.collectAsStateWithLifecycle()
     ScreenContent(
         state.value,
-        onViewDetalle,
         bottomNavigationBar = bottomNavigationBar
-    ) { viewmodel.handleEvent(VentaEvent.GetVentas) }
+    ) { viewmodel.handleEvent(ProductoEvent.GetProductos) }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ScreenContent(
-    state: VentaState,
-    onViewDetalle: (Long?) -> Unit,
+    state: ProductoState,
     bottomNavigationBar: @Composable () -> Unit,
     function: () -> Unit
 ) {
@@ -78,7 +75,7 @@ fun ScreenContent(
 
             items(items = state.lista, key = { venta -> venta.id }) { venta ->
                 TiendaItem(
-                    venta = venta, onViewDetalle = onViewDetalle,
+                    producto = venta,
                     modifier = Modifier.animateItemPlacement(
                         animationSpec = tween(1000)
                     )
@@ -92,9 +89,9 @@ fun ScreenContent(
 
 @Composable
 fun TiendaItem(
-    venta: Venta,
+    producto: Producto,
 
-    onViewDetalle: (Long?) -> Unit,
+
     modifier: Modifier = Modifier
 ) {
 
@@ -102,12 +99,13 @@ fun TiendaItem(
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable(onClick = { onViewDetalle(venta.id) })
+
     ) {
         Row(modifier = Modifier.padding(8.dp)) {
             Text(
-                text = venta.total.toString() + "€"
+                text = producto.nombre
             )
+
 
 
         }

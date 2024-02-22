@@ -15,14 +15,13 @@ import com.serverschema.GetTiendasQuery
 import javax.inject.Inject
 
 
-class RemoteDataSourceCliente @Inject constructor(private val apolloClient: ApolloClient)
- {
+class RemoteDataSourceCliente @Inject constructor(private val apolloClient: ApolloClient) {
 
-   suspend fun getClientes(): NetworkResult<List<Cliente>> {
+    suspend fun getClientes(): NetworkResult<List<Cliente>> {
         return try {
             val response = apolloClient.query(GetClienteQuery()).execute()
             if (response.hasErrors()) {
-                    NetworkResult.Error(response.errors?.first()?.message ?: "Error Desconocido")
+                NetworkResult.Error(response.errors?.first()?.message ?: "Error Desconocido")
 
             } else {
                 val clientes = response.data?.getClientes?.map {
@@ -40,7 +39,7 @@ class RemoteDataSourceCliente @Inject constructor(private val apolloClient: Apol
 
     }
 
-suspend fun deleteCliente(id: Long): NetworkResult<String> {
+    suspend fun deleteCliente(id: Long): NetworkResult<String> {
         return try {
             val response = apolloClient.mutation(DeleteClienteMutation(id.toString())).execute()
             if (response.hasErrors()) {
@@ -52,5 +51,5 @@ suspend fun deleteCliente(id: Long): NetworkResult<String> {
             NetworkResult.Error(e.message ?: e.toString())
         }
     }
-    
+
 }

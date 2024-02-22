@@ -55,10 +55,10 @@ class TokenAuthenticator @Inject constructor(private val tokenManager: TokenMana
             if (loginTokens != null) {
                 NetworkResult.Success(loginTokens)
             } else {
-                NetworkResult.Error("${response.code()} ${response.message()}")
+                NetworkResult.Error("${response.code()} ${response.errorBody()}")
             }
         } else {
-            NetworkResult.Error("${response.code()} ${response.message()}")
+            NetworkResult.Error("${response.code()} ${response.errorBody()}")
         }
         } catch (e: Exception) {
             return NetworkResult.Error(e.message ?: e.toString())
